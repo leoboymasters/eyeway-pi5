@@ -35,30 +35,36 @@ from config import DEFAULT_CAMERA_HEIGHT, DEFAULT_CAMERA_PITCH
 class DepthEstimator:
     """Depth Anything V3 estimator for Raspberry Pi 5."""
     
-    # Available DA3 models (smaller = faster on Pi)
-    # Using relative depth models (MONO) - metric depth requires camera calibration
+    # Available DA3 models
+    # Metric models output actual distances in meters
+    # Mono models output relative depth (0-1 scale)
     MODELS = {
-        'base': 'depth-anything/DA3-BASE',        # 0.1B params - fastest
-        'large': 'depth-anything/DA3-LARGE',      # 0.4B params
-        'giant': 'depth-anything/DA3-GIANT-1.1',  # 1B params - slowest
+        # METRIC DEPTH (real distances in meters) - recommended for Eyeway
+        'metric': 'depth-anything/DA3METRIC-LARGE',      # 0.35B params - outputs meters
+        
+        # RELATIVE DEPTH (faster, but no actual distance)
+        'base': 'depth-anything/DA3-BASE',               # 0.1B params - relative
+        'large': 'depth-anything/DA3-LARGE',             # 0.4B params - relative
+        'mono': 'depth-anything/DA3MONO-LARGE',          # 0.35B params - relative
     }
     
-    def __init__(self, model_size: str = 'base', process_res: int = 384):
+    def __init__(self, model_size: str = 'metric', process_res: int = 384):
         """
         Initialize Depth Anything V3 estimator.
         
         Args:
-            model_size: 'base', 'large', or 'giant'
-                - base: Fastest (0.1B params), recommended for Pi 5
-                - large: Better quality (0.4B params)
-                - giant: Best quality (1B params), very slow on Pi
+            model_size: 'metric', 'base', 'large', or 'mono'
+                - metric: DA3METRIC-LARGE - outputs real distances in meters
+                - base: DA3-BASE (0.1B) - fastest, relative depth
+                - large: DA3-LARGE (0.4B) - relative depth
+                - mono: DA3MONO-LARGE - relative depth
             process_res: Processing resolution (lower = faster)
                 - 256: Fastest
                 - 384: Good balance for Pi
                 - 504: Better quality, slower
         """
         self.model_size = model_size
-        self.model_name = self.MODELS.get(model_size, self.MODELS['base'])
+        self.model_name = self.MODELS.get(model_size, self.MODELS['metric'])
         self.process_res = process_res
         self.model = None
         self.device = 'cpu'  # Pi 5 = CPU only

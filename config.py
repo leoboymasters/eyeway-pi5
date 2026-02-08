@@ -24,10 +24,11 @@ YOLO_MODEL = MODELS_DIR / "yolo11n.pt"  # Use nano model for speed
 CONFIDENCE_THRESHOLD = 0.5
 
 # Depth Anything V3 Settings
-DEPTH_MODEL_SIZE = "base"   # Options: 'base', 'large', 'giant'
-                            # base = fastest (0.1B params), recommended for Pi 5
-                            # large = better quality (0.4B params)
-                            # giant = best quality (1B params), very slow on CPU
+DEPTH_MODEL_SIZE = "metric"  # Options: 'metric', 'base', 'large', 'mono'
+                            # metric = DA3METRIC-LARGE (0.35B) - outputs real meters
+                            # base = DA3-BASE (0.1B) - fastest, relative depth
+                            # large = DA3-LARGE (0.4B) - relative depth
+                            # mono = DA3MONO-LARGE (0.35B) - relative depth
 DEPTH_PROCESS_RES = 384     # Processing resolution (256, 384, or 504)
                             # Lower = faster, higher = more accurate
 
