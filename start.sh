@@ -87,6 +87,11 @@ echo ""
 echo -e "${GREEN}Starting Eyeway...${NC}"
 echo ""
 
+# Fix Qt display issues on Raspberry Pi (Wayland compatibility)
+export QT_QPA_PLATFORM=xcb  # Use X11 instead of Wayland
+export QT_LOGGING_RULES="qt.qpa.*=false"  # Suppress Qt warnings
+export OPENCV_VIDEOIO_PRIORITY_LIST="V4L2"  # Prefer V4L2 for camera
+
 python3 main.py --camera "$CAMERA" $NO_DEPTH
 
 # Cleanup
