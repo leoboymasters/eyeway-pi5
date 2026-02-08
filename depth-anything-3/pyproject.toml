@@ -12,37 +12,40 @@ license = { text = "Apache-2.0" }
 authors = [{ name = "Your Name" }]
 
 dependencies = [
-    "pre-commit",
-    "trimesh",
+    # Core dependencies for basic depth inference only
     "torch>=2",
     "torchvision",
     "einops",
     "huggingface_hub",
-    "imageio",
     "numpy<2",
     "opencv-python",
-    "fastapi",
-    "uvicorn",
-    "requests",
-    "typer",
     "pillow",
     "omegaconf",
-    "evo",
-    "e3nn",
-    "moviepy",
-    "plyfile",
-    "pillow_heif",
     "safetensors",
-    "uvicorn",
-    "moviepy==1.0.3",
-    "typer>=0.9.0",
-    "pycolmap",
+    "addict",
+    "timm",
 ]
 
 [project.optional-dependencies]
-app = ["gradio>=5", "pillow>=9.0"] # requires that python3>=3.10
+# Full features (3D export, API server, etc.)
+full = [
+    "trimesh",
+    "imageio",
+    "fastapi",
+    "uvicorn",
+    "requests",
+    "typer>=0.9.0",
+    "evo",
+    "e3nn",
+    "moviepy==1.0.3",
+    "plyfile",
+    "pillow_heif",
+    "pycolmap",
+    "pre-commit",
+]
+app = ["gradio>=5", "pillow>=9.0"]
 gs = ["gsplat @ git+https://github.com/nerfstudio-project/gsplat.git@0b4dddf04cb687367602c01196913cde6a743d70"]
-all = ["depth-anything-3[app,gs]"]
+all = ["depth-anything-3[full,app,gs]"]
 
 
 [project.scripts]
