@@ -24,10 +24,10 @@ YOLO_MODEL = MODELS_DIR / "yolo11n.pt"  # Use nano model for speed
 CONFIDENCE_THRESHOLD = 0.5
 
 # Depth Anything V3 Settings
-DEPTH_MODEL_SIZE = "small"  # Options: 'small', 'base', 'large'
-                            # small = fastest, recommended for Pi 5
-                            # base = balanced
-                            # large = best quality, very slow on CPU
+DEPTH_MODEL_SIZE = "base"   # Options: 'base', 'large', 'giant'
+                            # base = fastest (0.1B params), recommended for Pi 5
+                            # large = better quality (0.4B params)
+                            # giant = best quality (1B params), very slow on CPU
 DEPTH_PROCESS_RES = 384     # Processing resolution (256, 384, or 504)
                             # Lower = faster, higher = more accurate
 

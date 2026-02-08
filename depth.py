@@ -36,21 +36,22 @@ class DepthEstimator:
     """Depth Anything V3 estimator for Raspberry Pi 5."""
     
     # Available DA3 models (smaller = faster on Pi)
+    # Using relative depth models (MONO) - metric depth requires camera calibration
     MODELS = {
-        'small': 'depth-anything/DA3Metric-Small',
-        'base': 'depth-anything/DA3Metric-Base', 
-        'large': 'depth-anything/DA3Metric-Large',
+        'base': 'depth-anything/DA3-BASE',        # 0.1B params - fastest
+        'large': 'depth-anything/DA3-LARGE',      # 0.4B params
+        'giant': 'depth-anything/DA3-GIANT-1.1',  # 1B params - slowest
     }
     
-    def __init__(self, model_size: str = 'small', process_res: int = 384):
+    def __init__(self, model_size: str = 'base', process_res: int = 384):
         """
         Initialize Depth Anything V3 estimator.
         
         Args:
-            model_size: 'small', 'base', or 'large'
-                - small: Fastest, recommended for Pi 5
-                - base: Balanced
-                - large: Best quality, very slow on Pi
+            model_size: 'base', 'large', or 'giant'
+                - base: Fastest (0.1B params), recommended for Pi 5
+                - large: Better quality (0.4B params)
+                - giant: Best quality (1B params), very slow on Pi
             process_res: Processing resolution (lower = faster)
                 - 256: Fastest
                 - 384: Good balance for Pi
