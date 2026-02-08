@@ -26,6 +26,7 @@ huggingface-hub>=0.20.0
 omegaconf>=2.3.0
 einops>=0.7.0
 safetensors>=0.4.0
+imageio>=2.31.0
 
 # GUI (optional - for display mode)
 # customtkinter>=5.0.0  # Uncomment if using GUI
