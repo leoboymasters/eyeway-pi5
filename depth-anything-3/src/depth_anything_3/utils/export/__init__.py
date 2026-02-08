@@ -15,8 +15,9 @@
 from depth_anything_3.specs import Prediction
 # GS exports are lazy-loaded to avoid requiring gsplat/moviepy/plyfile dependencies
 # when only using basic depth estimation
+# COLMAP export is also lazy-loaded to avoid requiring pycolmap
 
-from .colmap import export_to_colmap
+# from .colmap import export_to_colmap  # Requires pycolmap - lazy load instead
 from .depth_vis import export_to_depth_vis
 from .feat_vis import export_to_feat_vis
 from .glb import export_to_glb
@@ -54,6 +55,8 @@ def export(
         from depth_anything_3.utils.export.gs import export_to_gs_video
         export_to_gs_video(prediction, export_dir, **kwargs.get(export_format, {}))
     elif export_format == "colmap":
+        # Lazy import to avoid requiring pycolmap
+        from depth_anything_3.utils.export.colmap import export_to_colmap
         export_to_colmap(prediction, export_dir, **kwargs.get(export_format, {}))
     else:
         raise ValueError(f"Unsupported export format: {export_format}")
