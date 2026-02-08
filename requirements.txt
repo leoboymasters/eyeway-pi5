@@ -1,0 +1,31 @@
+# Eyeway App - Raspberry Pi 5 Requirements
+# Optimized for ARM64 architecture with CPU-only inference
+
+# Core
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Computer Vision
+opencv-python-headless  # Headless version for Pi
+pillow>=9.0.0
+
+# Machine Learning (CPU-only)
+torch --index-url https://download.pytorch.org/whl/cpu
+torchvision --index-url https://download.pytorch.org/whl/cpu
+
+# YOLO Object Detection
+ultralytics>=8.0.0
+
+# Depth Estimation (lighter alternative for Pi)
+# Using MiDaS instead of Depth Anything V3 for better Pi performance
+timm>=0.9.0
+
+# GUI (optional - for display mode)
+# customtkinter>=5.0.0  # Uncomment if using GUI
+
+# Utilities
+tqdm>=4.65.0
+pyyaml>=6.0
+
+# Audio feedback (optional)
+# pyttsx3  # Text-to-speech for audio alerts
