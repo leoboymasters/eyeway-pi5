@@ -29,18 +29,20 @@ class EyewayApp:
         self,
         camera_index: int = CAMERA_INDEX,
         enable_depth: bool = True,
+        enable_detection: bool = True,
         enable_audio: bool = ENABLE_AUDIO,
         camera_height: float = DEFAULT_CAMERA_HEIGHT,
         camera_pitch: float = DEFAULT_CAMERA_PITCH
     ):
         self.camera = PiCamera(camera_index=camera_index)
-        self.detector = ObjectDetector()
+        self.detector = ObjectDetector() if enable_detection else None
         self.depth_estimator = DepthEstimator(
             model_size=DEPTH_MODEL_SIZE, 
             process_res=DEPTH_PROCESS_RES
         ) if enable_depth else None
         
         self.enable_depth = enable_depth
+        self.enable_detection = enable_detection
         self.enable_audio = enable_audio
         self.camera_height = camera_height
         self.camera_pitch = camera_pitch
@@ -57,10 +59,13 @@ class EyewayApp:
         print("=" * 50)
         
         # Load detector
-        print("\n[1/3] Loading object detector...")
-        if not self.detector.load():
-            print("Failed to load detector!")
-            return False
+        if self.enable_detection:
+            print("\n[1/3] Loading object detector...")
+            if not self.detector.load():
+                print("Failed to load detector!")
+                return False
+        else:
+            print("\n[1/3] Object detection disabled")
         
         # Load depth estimator
         if self.enable_depth:
@@ -86,13 +91,28 @@ class EyewayApp:
         """Process a single frame with detection and depth."""
         output = frame.copy()
         
-        # Run object detection
-        detections = self.detector.detect(frame)
+        # Run object detection if enabled
+        detections = []
+        if self.enable_detection and self.detector is not None:
+            detections = self.detector.detect(frame)
         
         # Get depth map if enabled
         depth_map = None
         if self.enable_depth and self.depth_estimator is not None:
             depth_map = self.depth_estimator.estimate(frame)
+        
+        # If depth-only mode (no detection), show colorized depth
+        if depth_map is not None and not self.enable_detection:
+            colored_depth = self.depth_estimator.colorize(depth_map)
+            # Blend depth with original frame
+            output = cv2.addWeighted(output, 0.4, colored_depth, 0.6, 0)
+            
+            # Show center depth
+            h, w = depth_map.shape[:2]
+            center_depth = depth_map[h//2, w//2]
+            cv2.circle(output, (w//2, h//2), 10, (0, 255, 0), 2)
+            cv2.putText(output, f"{center_depth:.2f}m", (w//2 + 15, h//2 + 5),
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
         
         # Process each detection
         for det in detections:
@@ -230,6 +250,10 @@ def main():
         help="Disable depth estimation for faster inference"
     )
     parser.add_argument(
+        "--depth-only", action="store_true",
+        help="Run depth estimation only (no YOLO detection)"
+    )
+    parser.add_argument(
         "--height", type=float, default=DEFAULT_CAMERA_HEIGHT,
         help="Camera height from ground in meters (default: 1.5)"
     )
@@ -244,9 +268,17 @@ def main():
     
     args = parser.parse_args()
     
+    # depth-only mode: enable depth, disable detection
+    enable_depth = not args.no_depth
+    enable_detection = not args.depth_only
+    
+    if args.depth_only:
+        enable_depth = True  # Force depth on in depth-only mode
+    
     app = EyewayApp(
         camera_index=args.camera,
-        enable_depth=not args.no_depth,
+        enable_depth=enable_depth,
+        enable_detection=enable_detection,
         enable_audio=args.audio,
         camera_height=args.height,
         camera_pitch=args.pitch

@@ -13,14 +13,13 @@
 # limitations under the License.
 
 from depth_anything_3.specs import Prediction
-# GS exports are lazy-loaded to avoid requiring gsplat/moviepy/plyfile dependencies
-# when only using basic depth estimation
-# COLMAP export is also lazy-loaded to avoid requiring pycolmap
+# All export functions are lazy-loaded to avoid requiring heavy dependencies
+# (trimesh, pycolmap, gsplat, moviepy, etc.) when only using basic depth estimation
 
-# from .colmap import export_to_colmap  # Requires pycolmap - lazy load instead
+# from .colmap import export_to_colmap  # Requires pycolmap - lazy load
+# from .glb import export_to_glb  # Requires trimesh - lazy load
+# from .feat_vis import export_to_feat_vis  # May have deps - lazy load
 from .depth_vis import export_to_depth_vis
-from .feat_vis import export_to_feat_vis
-from .glb import export_to_glb
 from .npz import export_to_mini_npz, export_to_npz
 
 
@@ -37,12 +36,16 @@ def export(
         return  # Prevent falling through to single-format handling
 
     if export_format == "glb":
+        # Lazy import to avoid requiring trimesh
+        from .glb import export_to_glb
         export_to_glb(prediction, export_dir, **kwargs.get(export_format, {}))
     elif export_format == "mini_npz":
         export_to_mini_npz(prediction, export_dir)
     elif export_format == "npz":
         export_to_npz(prediction, export_dir)
     elif export_format == "feat_vis":
+        # Lazy import
+        from .feat_vis import export_to_feat_vis
         export_to_feat_vis(prediction, export_dir, **kwargs.get(export_format, {}))
     elif export_format == "depth_vis":
         export_to_depth_vis(prediction, export_dir)

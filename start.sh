@@ -54,12 +54,17 @@ fi
 
 # Parse arguments
 NO_DEPTH=""
+DEPTH_ONLY=""
 CAMERA="0"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
         --no-depth)
             NO_DEPTH="--no-depth"
+            shift
+            ;;
+        --depth-only)
+            DEPTH_ONLY="--depth-only"
             shift
             ;;
         --camera)
@@ -70,9 +75,10 @@ while [[ $# -gt 0 ]]; do
             echo "Usage: ./start.sh [OPTIONS]"
             echo ""
             echo "Options:"
-            echo "  --no-depth    Disable depth estimation (faster)"
-            echo "  --camera N    Use camera index N (default: 0)"
-            echo "  --help        Show this help"
+            echo "  --no-depth      Disable depth estimation (faster)"
+            echo "  --depth-only    Run depth only (no YOLO detection)"
+            echo "  --camera N      Use camera index N (default: 0)"
+            echo "  --help          Show this help"
             exit 0
             ;;
         *)
@@ -92,7 +98,7 @@ export QT_QPA_PLATFORM=xcb  # Use X11 instead of Wayland
 export QT_LOGGING_RULES="qt.qpa.*=false"  # Suppress Qt warnings
 export OPENCV_VIDEOIO_PRIORITY_LIST="V4L2"  # Prefer V4L2 for camera
 
-python3 main.py --camera "$CAMERA" $NO_DEPTH
+python3 main.py --camera "$CAMERA" $NO_DEPTH $DEPTH_ONLY
 
 # Cleanup
 deactivate 2>/dev/null || true
