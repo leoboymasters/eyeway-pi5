@@ -18,11 +18,14 @@ ultralytics>=8.0.0
 
 # Depth Anything V3
 # Install from local source:
-#   pip install ../dependencies/depth-anything-3
+#   pip install ./depth-anything-3
 # Required dependencies for DA3:
 timm>=0.9.0
 transformers>=4.30.0
 huggingface-hub>=0.20.0
+omegaconf>=2.3.0
+einops>=0.7.0
+safetensors>=0.4.0
 
 # GUI (optional - for display mode)
 # customtkinter>=5.0.0  # Uncomment if using GUI
