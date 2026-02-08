@@ -58,7 +58,7 @@ class DepthEstimator:
                 - 504: Better quality, slower
         """
         self.model_size = model_size
-        self.model_name = self.MODELS.get(model_size, self.MODELS['small'])
+        self.model_name = self.MODELS.get(model_size, self.MODELS['base'])
         self.process_res = process_res
         self.model = None
         self.device = 'cpu'  # Pi 5 = CPU only
