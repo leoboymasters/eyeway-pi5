@@ -16,7 +16,16 @@ from pathlib import Path
 # Add path to depth_anything_3 module
 APP_DIR = Path(__file__).parent
 PROJECT_ROOT = APP_DIR.parent
-DA3_PATH = PROJECT_ROOT / 'dependencies' / 'depth-anything-3' / 'src'
+
+# Try local copy first (in eyeway app folder), then fallback to parent dependencies
+DA3_LOCAL = APP_DIR / 'depth-anything-3' / 'src'
+DA3_PARENT = PROJECT_ROOT / 'dependencies' / 'depth-anything-3' / 'src'
+
+if DA3_LOCAL.exists():
+    DA3_PATH = DA3_LOCAL
+else:
+    DA3_PATH = DA3_PARENT
+
 if str(DA3_PATH) not in sys.path:
     sys.path.insert(0, str(DA3_PATH))
 
