@@ -14,7 +14,8 @@ from typing import Optional
 from config import (
     CAMERA_INDEX, SKIP_FRAMES, SHOW_PREVIEW,
     DEFAULT_CAMERA_HEIGHT, DEFAULT_CAMERA_PITCH,
-    ENABLE_AUDIO, DISTANCE_WARNING_THRESHOLD
+    ENABLE_AUDIO, DISTANCE_WARNING_THRESHOLD,
+    DEPTH_MODEL_SIZE, DEPTH_PROCESS_RES
 )
 from camera import PiCamera
 from detector import ObjectDetector
@@ -34,7 +35,10 @@ class EyewayApp:
     ):
         self.camera = PiCamera(camera_index=camera_index)
         self.detector = ObjectDetector()
-        self.depth_estimator = DepthEstimator() if enable_depth else None
+        self.depth_estimator = DepthEstimator(
+            model_size=DEPTH_MODEL_SIZE, 
+            process_res=DEPTH_PROCESS_RES
+        ) if enable_depth else None
         
         self.enable_depth = enable_depth
         self.enable_audio = enable_audio

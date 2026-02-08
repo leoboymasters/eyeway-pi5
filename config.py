@@ -21,12 +21,19 @@ CAMERA_FPS = 30
 
 # Model Settings
 YOLO_MODEL = MODELS_DIR / "yolo11n.pt"  # Use nano model for speed
-DEPTH_MODEL = "midas_v21_small"  # Lightweight depth model for Pi
 CONFIDENCE_THRESHOLD = 0.5
+
+# Depth Anything V3 Settings
+DEPTH_MODEL_SIZE = "small"  # Options: 'small', 'base', 'large'
+                            # small = fastest, recommended for Pi 5
+                            # base = balanced
+                            # large = best quality, very slow on CPU
+DEPTH_PROCESS_RES = 384     # Processing resolution (256, 384, or 504)
+                            # Lower = faster, higher = more accurate
 
 # Performance Settings
 USE_HALF_PRECISION = False  # Disabled for CPU
-MAX_INFERENCE_SIZE = 384  # Smaller input size for faster inference
+MAX_INFERENCE_SIZE = 384  # YOLO input size for faster inference
 SKIP_FRAMES = 2  # Process every Nth frame to maintain real-time
 
 # Display Settings
