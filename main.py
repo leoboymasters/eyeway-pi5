@@ -91,12 +91,8 @@ class EyewayApp:
         
         # Get depth map if enabled
         depth_map = None
-        if self.enable_depth:
-            depth_map = self.depth_estimator.estimate_metric(
-                frame,
-                camera_height=self.camera_height,
-                camera_pitch=self.camera_pitch
-            )
+        if self.enable_depth and self.depth_estimator is not None:
+            depth_map = self.depth_estimator.estimate(frame)
         
         # Process each detection
         for det in detections:
